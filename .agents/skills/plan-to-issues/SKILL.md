@@ -14,8 +14,26 @@ in a shell this agent can run.
 2. Draft the split as a table: title · plan section · scope · done when · blocked by.
    One issue per unit of work.
 3. **Stop and show the table to the human.** Publish nothing until they approve it.
-4. Ask the human what every issue here must carry (fields, labels, wording), unless it is
-   already written down in this session or in the repo.
+4. Every issue here carries the shape below (decided 2026-11-08 for plan morning-digest;
+   ADR 0002 names the parts). Ask the human only if a plan needs more than this.
+
+   ```md
+   Source: plan.md § <n>          ← first line, exactly; the reviewer sorts on it
+
+   ## Scope
+   <what to build, in the plan's words, plus the repo rules that bind it (ADR numbers)>
+
+   ## Done when
+   <the plan's "Done when", checkable>
+
+   ## Blocked by
+   <#n, #m — real issue numbers, or —>
+   ```
+
+   Title: `<part>: <what>` (e.g. `Digest page: GET /digest/:night`). Label: `plan:<plan name>`
+   from the plan's frontmatter (`--label plan:morning-digest`). An issue whose "Done when"
+   depends on someone outside the lane (a reviewer, a host, a human) stays open until they
+   confirm; "sent" is not "seen". The clean-up issue is blocked by it.
 5. Create each issue in dependency order, so blocked-by can cite real numbers:
 
    ```sh
@@ -29,6 +47,10 @@ Closing one, with the closing comment from AGENTS.md:
 ```sh
 gh issue close <n> -c "<closing comment>"
 ```
+
+A commit message with `closes #n` closes the issue on push, before any comment. Then post the
+closing comment with `gh issue comment <n> -b "<closing comment>"`; a closed issue without it
+is not done.
 
 ## No `gh`
 
